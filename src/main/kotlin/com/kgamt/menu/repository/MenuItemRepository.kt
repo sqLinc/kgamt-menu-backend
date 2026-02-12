@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 
 interface MenuItemRepository : JpaRepository<MenuItem, Long> {
-    fun findALlByMenuDay(menuDay: MenuDay): List<MenuItem>
+    fun findAllByMenuDay(menuDay: MenuDay): List<MenuItem>
 }
