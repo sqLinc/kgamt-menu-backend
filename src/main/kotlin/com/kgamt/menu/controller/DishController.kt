@@ -19,6 +19,8 @@ class DishController(
         dishService.getAll()
 
     @PostMapping
-    fun create(@RequestBody dish: Dish): Dish =
+    fun create(
+        @RequestBody dish: Dish
+    ): Dish =
         dishService.save(dish)
 }

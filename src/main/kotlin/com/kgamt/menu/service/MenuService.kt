@@ -8,6 +8,7 @@ import com.kgamt.menu.entity.MenuItem
 import com.kgamt.menu.repository.DishRepository
 import com.kgamt.menu.repository.MenuDayRepository
 import com.kgamt.menu.repository.MenuItemRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -42,6 +43,32 @@ class MenuService(
             menuItemRepository.save(MenuItem(menuDay = menuDay, dish = dish))
         }
 
+    }
+
+    @Transactional
+    fun updateMenuByDate(request: CreateMenuRequest){
+        val menuDay = menuDayRepository.findByDate(request.date)
+            ?: throw RuntimeException("Menu not found")
+
+        val oldItems = menuItemRepository.findAllByMenuDay(menuDay)
+        menuItemRepository.deleteAll(oldItems)
+
+        val items = dishRepository.findAllById(request.dishIds)
+
+        items.forEach {  dish ->
+            menuItemRepository.save(MenuItem(menuDay = menuDay, dish = dish))
+        }
+    }
+
+    @Transactional
+    fun deleteMenuByDate(date: LocalDate){
+        val menuDay = menuDayRepository.findByDate(date)
+            ?: throw RuntimeException("Menu not found")
+
+        val items = menuItemRepository.findAllByMenuDay(menuDay)
+        menuItemRepository.deleteAll(items)
+
+        menuDayRepository.delete(menuDay)
     }
 
 }
