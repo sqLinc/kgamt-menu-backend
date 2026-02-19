@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Panel</title>
+</head>
+<body>
+
+<h2>Меню по дням</h2>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Дата</th>
+  </tr>
+  <tr th:each="menu : ${menuDays}">
+    <td th:text="${menu.id}"></td>
+    <td th:text="${menu.date}"></td>
+  </tr>
+</table>
+
+<a href="/logout">Выйти</a>
+
+</body>
+</html>

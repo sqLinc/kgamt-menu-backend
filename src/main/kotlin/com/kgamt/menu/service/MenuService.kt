@@ -11,13 +11,35 @@ import com.kgamt.menu.repository.MenuItemRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 @Service
 class MenuService(
     private val menuDayRepository: MenuDayRepository,
     private val menuItemRepository: MenuItemRepository,
-    private val dishRepository: DishRepository
+    private val dishRepository: DishRepository,
 ) {
+
+    fun getFullMenu(): List<MenuResponse> {
+        val menuResponseList: MutableList<MenuResponse> = mutableListOf()
+        val menuDays = menuDayRepository.findAll()
+
+        menuDays
+            .forEach { menuDay ->
+                val items = menuItemRepository.findAllByMenuDay(menuDay)
+                    .map {
+                        MenuItemDto(
+                            id = it.dish.id,
+                            name = it.dish.name,
+                            price = it.dish.price
+                        )
+                    }
+                menuResponseList.add(MenuResponse(menuDay.date, menuDay.weekDay, items))
+
+        }
+        return menuResponseList
+
+    }
 
     fun getMenuByDate(date: LocalDate): MenuResponse {
         val menuDay = menuDayRepository.findByDate(date)
@@ -31,12 +53,12 @@ class MenuService(
                     price = it.dish.price
                 )
             }
-        return MenuResponse(menuDay.date, items)
+        return MenuResponse(menuDay.date, menuDay.weekDay, items)
     }
 
     fun createMenuByDate(request: CreateMenuRequest){
 
-        val menuDay = menuDayRepository.save(MenuDay(date = request.date))
+        val menuDay = menuDayRepository.save(MenuDay(date = request.date, weekDay = request.weekDay))
         val dishes = dishRepository.findAllById(request.dishIds)
 
         dishes.forEach { dish ->
@@ -69,6 +91,12 @@ class MenuService(
         menuItemRepository.deleteAll(items)
 
         menuDayRepository.delete(menuDay)
+    }
+
+    @Transactional
+    fun deleteWeekMenu() {
+        menuItemRepository.deleteAll()
+        menuDayRepository.deleteAll()
     }
 
 }

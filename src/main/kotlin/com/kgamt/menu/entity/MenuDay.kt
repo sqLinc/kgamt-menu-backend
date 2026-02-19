@@ -12,5 +12,6 @@ data class MenuDay(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val date: LocalDate
+    val date: LocalDate,
+    val weekDay: String
 )

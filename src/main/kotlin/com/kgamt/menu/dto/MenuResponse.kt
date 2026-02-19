@@ -10,6 +10,7 @@ data class MenuItemDto(
 
 data class MenuResponse(
     val date: LocalDate,
+    val weekDay: String,
     val items: List<MenuItemDto>,
 )
 

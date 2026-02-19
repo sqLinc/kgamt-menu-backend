@@ -26,6 +26,11 @@ class MenuController(
         return menuService.getMenuByDate(LocalDate.parse(date))
     }
 
+    @GetMapping("/full")
+    fun getFullMenu() : List<MenuResponse> {
+        return menuService.getFullMenu()
+    }
+
     @PostMapping
     fun saveMenu(
         @RequestBody request: CreateMenuRequest
@@ -45,6 +50,11 @@ class MenuController(
         @RequestParam date: String
     ) {
         menuService.deleteMenuByDate(LocalDate.parse(date))
+    }
+
+    @DeleteMapping("/deleteFull")
+    fun deleteWeekMenu() {
+        menuService.deleteWeekMenu()
     }
 
 }
