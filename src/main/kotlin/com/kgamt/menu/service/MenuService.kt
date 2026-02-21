@@ -31,7 +31,11 @@ class MenuService(
                         MenuItemDto(
                             id = it.dish.id,
                             name = it.dish.name,
-                            price = it.dish.price
+                            price = it.dish.price,
+                            quantity = it.dish.quantity,
+                            kcal = it.dish.kcal,
+                            desc = it.dish.desc,
+                            category = it.dish.category.toString()
                         )
                     }
                 menuResponseList.add(MenuResponse(menuDay.date, menuDay.weekDay, items))
@@ -50,7 +54,11 @@ class MenuService(
                 MenuItemDto(
                     id = it.dish.id,
                     name = it.dish.name,
-                    price = it.dish.price
+                    price = it.dish.price,
+                    quantity = it.dish.quantity,
+                    kcal = it.dish.kcal,
+                    desc = it.dish.desc,
+                    category = it.dish.category.toString()
                 )
             }
         return MenuResponse(menuDay.date, menuDay.weekDay, items)

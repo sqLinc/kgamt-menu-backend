@@ -3,17 +3,15 @@ package com.kgamt.menu.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
-import kotlin.math.log
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.filter.HiddenHttpMethodFilter
 
 
 @Configuration
@@ -30,7 +28,7 @@ class SecurityConfig {
                     .requestMatchers("/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/menu").permitAll()
-                    .requestMatchers("/api/**").hasRole("ADMIN")
+                    .requestMatchers("/api/**").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { form ->
@@ -56,18 +54,24 @@ class SecurityConfig {
 
         val admin = User.builder()
             .username("admin")
-            .password(passwordEncoder.encode("admin123"))
+            .password(passwordEncoder.encode("admin"))
             .roles("ADMIN")
             .build()
 
         val leader = User.builder()
             .username("leader")
-            .password(passwordEncoder.encode("leader123"))
+            .password(passwordEncoder.encode("leader"))
             .roles("LEADER")
             .build()
 
         return InMemoryUserDetailsManager(admin, leader)
 
     }
+
+    @Bean
+    fun hiddenHttpMethodFilter(): HiddenHttpMethodFilter {
+        return HiddenHttpMethodFilter()
+    }
+
 
 }
